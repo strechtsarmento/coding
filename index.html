@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Master BB Pro - V23</title>
+    <style>
+        :root {
+            --primary: #0047bb; --bg: #f8fafc; --card: #ffffff;
+            --muted: #94a3b8; --text: #0f172a; --accent: #fef08a;
+            --success: #22c55e; --error: #ef4444; --blue-light: #3b82f6;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); overflow: hidden; }
+
+        .viewport { display: flex; width: 400vw; height: 100vh; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1); }
+        .screen { width: 100vw; height: 100vh; overflow-y: auto; padding: 20px 20px 180px 20px; flex-shrink: 0; }
+
+        /* QUADRANTES HOME */
+        .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .quadrante { background: white; border-radius: 24px; padding: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.04); min-height: 140px; text-align: center; }
+        .quad-title { font-size: 10px; font-weight: 800; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+        
+        .circle-mini { position: relative; width: 85px; height: 85px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: conic-gradient(var(--primary) 0%, #e2e8f0 0%); cursor: pointer; }
+        .circle-mini::before { content: ""; position: absolute; width: 68px; height: 68px; background: white; border-radius: 50%; }
+        .circle-mini span { position: relative; font-weight: 800; font-size: 16px; color: var(--primary); }
+
+        /* FOCO */
+        .foco-externo { display: flex; justify-content: center; align-items: center; gap: 45px; margin-top: 40px; }
+        .foco-img { width: 115px; height: 115px; cursor: pointer; transition: 0.3s; opacity: 0.2; filter: grayscale(1); }
+        .foco-img.active { opacity: 1; filter: grayscale(0); transform: scale(1.1); }
+
+        /* CICLO */
+        .ciclo-card { background: white; border-radius: 22px; padding: 20px; margin-bottom: 12px; border: 1px solid #eef2f6; display: flex; justify-content: space-between; align-items: center; }
+        .ciclo-card.revisao { background: var(--accent); border: 2px solid #facc15; }
+        .check-circle { width: 48px; height: 48px; border-radius: 50%; border: 2.5px solid var(--primary); display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 22px; cursor: pointer; }
+        .btn-gerar { width: 100%; padding: 20px; background: var(--primary); color: white; border: none; border-radius: 22px; font-weight: 800; }
+
+        /* ACORDEÕES */
+        .acc-item { background: white; border-radius: 20px; margin-bottom: 10px; border: 1px solid #eef2f6; overflow: hidden; }
+        .acc-header { padding: 18px 22px; font-weight: 800; color: var(--primary); font-size: 13px; display: flex; justify-content: space-between; cursor: pointer; }
+        .acc-content { display: none; padding: 0 22px 20px 22px; border-top: 1px solid #f8fafc; }
+        .acc-item.active .acc-content { display: block; }
+        .sub-azul { font-size: 13px; color: var(--blue-light); padding: 7px 0; display: block; }
+        .sub-visto { color: #cbd5e1; text-decoration: line-through; opacity: 0.5; }
+
+        /* QUESTÕES */
+        .quest-box { background: #fdfdfd; border-radius: 18px; padding: 15px; border: 1px dashed #e2e8f0; }
+        .opcao { width: 100%; padding: 14px; border: 2px solid #f1f5f9; border-radius: 14px; margin-bottom: 8px; text-align: left; font-size: 13px; font-weight: 600; cursor: pointer; background: white; transition: 0.2s; }
+        .opcao.correct { background: var(--success) !important; color: white !important; border-color: var(--success) !important; }
+        .opcao.wrong { background: var(--error) !important; color: white !important; border-color: var(--error) !important; }
+
+        /* NAV */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: white; display: flex; justify-content: space-around; padding: 20px 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.05); z-index: 3000; border-radius: 30px 30px 0 0; }
+        .nav-item { border: none; background: none; color: #94a3b8; font-size: 11px; font-weight: 800; display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; }
+        .nav-item.active { color: var(--primary); }
+    </style>
+</head>
+<body>
+
+    <div class="viewport" id="viewport">
+        <div class="screen">
+            <h3 style="text-align:center; font-weight:900; color:var(--primary); margin:0 0 15px 0">Master Dashboard</h3>
+            <div class="home-grid">
+                <div class="quadrante">
+                    <div class="quad-title">Progresso</div>
+                    <div class="circle-mini" id="mini-circle"><span>0%</span></div>
+                </div>
+                <div class="quadrante">
+                    <div class="quad-title">Estudo</div>
+                    <div style="font-size:26px; font-weight:900; color:var(--primary)" id="h-total">0.0</div>
+                    <div style="font-size:10px; color:var(--muted)">Horas Totais</div>
+                </div>
+                <div class="quadrante">
+                    <div class="quad-title">Erros Críticos</div>
+                    <div id="p-fracos" style="font-size:10px; font-weight:700; color:#ef4444">Limpo</div>
+                </div>
+                <div class="quadrante">
+                    <div class="quad-title">Questões</div>
+                    <div style="font-size:20px; font-weight:800" id="qt-ex">0</div>
+                    <div style="font-size:10px; color:var(--muted)">Respondidas</div>
+                </div>
+            </div>
+            <div class="foco-externo">
+                <img id="f-off" src="on.png" class="foco-img active" onclick="toggleFoco(false)">
+                <img id="f-on" src="foco.png" class="foco-img" onclick="toggleFoco(true)">
+            </div>
+        </div>
+
+        <div class="screen"><h3 style="font-weight:900">Edital</h3><div id="edital-acc"></div></div>
+
+        <div class="screen"><h3 style="font-weight:900">Ciclo Atual</h3><div id="ciclo-lista"></div></div>
+
+        <div class="screen"><h3 style="font-weight:900">Prática por Matéria</h3><div id="treino-acc"></div></div>
+    </div>
+
+    <nav class="bottom-nav">
+        <button class="nav-item active" onclick="navegar(0)">🏠 INÍCIO</button>
+        <button class="nav-item" onclick="navegar(1)">📚 EDITAL</button>
+        <button class="nav-item" onclick="navegar(2)">🔄 CICLO</button>
+        <button class="nav-item" onclick="navegar(3)">🎯 QUESTÕES</button>
+    </nav>
+
+    <script>
+        const editalData = {
+            "BANCÁRIOS": ["SFN", "Bacen", "Produtos", "Câmbio", "Garantias"],
+            "VENDAS": ["Marketing", "CRM", "Atendimento", "CDC", "Ética"],
+            "PORTUGUÊS": ["Crase", "Pontuação", "Sintaxe", "Coesão", "Regência"],
+            "INFO": ["Office 365", "Segurança", "Windows", "Redes", "IA"],
+            "MATEMÁTICA": ["Porcentagem", "Juros", "Lógica", "Probabilidade"]
+        };
+
+        const KEY = 'bb_pro_v23_master';
+        let state = JSON.parse(localStorage.getItem(KEY)) || { visto: {}, erros: {}, qTotal: 0, cicloCont: 0, bloco: [] };
+        let curTab = 0;
+
+        // Pré-carregamento do áudio para evitar atrasos
+        const audioFoco = new Audio("https://docs.google.com/uc?export=download&id=1bG3xp75XK186MQw4zNTiwAb68kOyfLZs");
+
+        function navegar(i) {
+            curTab = i;
+            document.getElementById('viewport').style.transform = `translateX(-${i*100}vw)`;
+            document.querySelectorAll('.nav-item').forEach((n,idx) => n.classList.toggle('active', i === idx));
+            render();
+        }
+
+        function toggleFoco(ligar) {
+            document.getElementById('f-on').classList.toggle('active', ligar);
+            document.getElementById('f-off').classList.toggle('active', !ligar);
+            if(ligar) {
+                audioFoco.play().catch(e => console.log("Erro som:", e));
+            } else {
+                audioFoco.pause();
+                audioFoco.currentTime = 0;
+            }
+        }
+
+        function render() {
+            renderHome();
+            renderEdital();
+            renderCiclo();
+            renderTreino();
+        }
+
+        function renderHome() {
+            let total = 0, feitos = 0, h = 0;
+            Object.entries(editalData).forEach(([m, temas]) => {
+                temas.forEach((_, i) => {
+                    total++;
+                    if(state.visto[m+'-'+i]) { feitos++; h += 1.0; }
+                });
+            });
+            document.getElementById('h-total').innerText = h.toFixed(1);
+            document.getElementById('qt-ex').innerText = state.qTotal;
+            let p = Math.round((feitos/total)*100) || 0;
+            document.getElementById('mini-circle').querySelector('span').innerText = p + '%';
+            document.getElementById('mini-circle').style.background = `conic-gradient(var(--primary) ${p}%, #e2e8f0 0%)`;
+        }
+
+        function renderEdital() {
+            const cont = document.getElementById('edital-acc');
+            cont.innerHTML = Object.entries(editalData).map(([m, temas]) => `
+                <div class="acc-item">
+                    <div class="acc-header" onclick="this.parentElement.classList.toggle('active')">${m} <span>▾</span></div>
+                    <div class="acc-content">${temas.map((t, i) => `<span class="sub-azul ${state.visto[m+'-'+i] ? 'sub-visto' : ''}">${t}</span>`).join('')}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderCiclo() {
+            const cont = document.getElementById('ciclo-lista');
+            cont.innerHTML = "";
+            if (state.bloco.length === 0) {
+                cont.innerHTML = `<button class="btn-gerar" onclick="gerarBloco()">Gerar Novo Ciclo</button>`;
+                return;
+            }
+            state.bloco.forEach((t, i) => {
+                cont.innerHTML += `
+                    <div class="ciclo-card ${t.rev ? 'revisao' : ''}">
+                        <div><div style="font-size:10px; font-weight:900; color:var(--primary)">${t.rev ? '⚡ REVISÃO' : t.mat}</div>
+                        <div style="font-weight:700; font-size:15px">${t.nome}</div></div>
+                        <div class="check-circle" onclick="marcarCheck(${i})">✓</div>
+                    </div>`;
+            });
+        }
+
+        function gerarBloco() {
+            state.bloco = [];
+            state.cicloCont++;
+            const modoRev = state.cicloCont % 3 === 0;
+            const mats = Object.keys(editalData);
+            
+            // Garantir que todas as matérias rodem (inclusive Matemática e Info)
+            let disponiveis = mats.filter(m => editalData[m].findIndex((_, idx) => !state.visto[m+'-'+idx]) !== -1);
+            if(disponiveis.length === 0) disponiveis = mats;
+
+            for(let i=0; i<3; i++) {
+                let m = disponiveis[i % disponiveis.length];
+                
+                if(modoRev && i === 0) {
+                    let vistos = Object.keys(state.visto).filter(k => k.startsWith(m) && state.visto[k]);
+                    if(vistos.length > 0) {
+                        let k = vistos[vistos.length - 1];
+                        state.bloco.push({ mat: m, nome: editalData[m][k.split('-')[1]], idx: k.split('-')[1], rev: true });
+                        continue;
+                    }
+                }
+                
+                let idx = editalData[m].findIndex((_, idx) => !state.visto[m+'-'+idx]);
+                if(idx !== -1) state.bloco.push({ mat: m, nome: editalData[m][idx], idx: idx, rev: false });
+            }
+            save(); render();
+        }
+
+        function marcarCheck(i) {
+            const t = state.bloco[i];
+            if(!t.rev) state.visto[t.mat+'-'+t.idx] = true;
+            state.bloco.splice(i, 1);
+            save(); render();
+        }
+
+        function renderTreino() {
+            const cont = document.getElementById('treino-acc');
+            cont.innerHTML = Object.entries(editalData).map(([mat, temas]) => `
+                <div class="acc-item" id="treino-${mat}">
+                    <div class="acc-header" onclick="toggleTreino('${mat}')">${mat} <span>▾</span></div>
+                    <div class="acc-content">
+                        <div class="quest-box">
+                            <p id="txt-${mat}" style="font-weight:700; margin-bottom:15px">Carregando questão...</p>
+                            <div id="opts-${mat}"></div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleTreino(mat) {
+            document.querySelectorAll('#treino-acc .acc-item').forEach(it => {
+                if(it.id === 'treino-'+mat) {
+                    it.classList.toggle('active');
+                    if(it.classList.contains('active')) novaQuestao(mat);
+                } else { it.classList.remove('active'); }
+            });
+        }
+
+        function novaQuestao(mat) {
+            const temas = editalData[mat];
+            const t = temas[Math.floor(Math.random() * temas.length)];
+            const txt = document.getElementById('txt-'+mat);
+            const opts = document.getElementById('opts-'+mat);
+            txt.innerText = `Sobre o tema "${t}", selecione a afirmação correta:`;
+            const gab = "Opção correta de acordo com o edital.";
+            const escolhas = [gab, "Alternativa incorreta 1", "Alternativa incorreta 2", "Incorreta baseada em distrações"].sort(() => Math.random() - 0.5);
+            opts.innerHTML = escolhas.map(o => `<button class="opcao" onclick="validar(this, '${o === gab}', '${mat}', '${t}')">${o}</button>`).join('');
+        }
+
+        function validar(btn, isC, mat, t) {
+            state.qTotal++;
+            const pai = btn.parentElement;
+            if(isC === 'true') {
+                btn.classList.add('correct');
+            } else {
+                btn.classList.add('wrong');
+                Array.from(pai.querySelectorAll('.opcao')).forEach(b => {
+                    if(b.innerText === "Opção correta de acordo com o edital.") b.classList.add('correct');
+                });
+                state.erros[t] = (state.erros[t] || 0) + 1;
+            }
+            save(); renderHome();
+            setTimeout(() => { if(document.getElementById('treino-'+mat).classList.contains('active')) novaQuestao(mat); }, 1500);
+        }
+
+        function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
+        window.onload = render;
+    </script>
+</body>
+</html>
