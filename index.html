@@ -273,6 +273,33 @@
 
         function save() { localStorage.setItem(KEY, JSON.stringify(state)); }
         window.onload = render;
+
+        const audioFoco = new Audio();
+        audioFoco.src = "https://docs.google.com/uc?export=download&id=1bG3xp75XK186MQw4zNTiwAb68kOyfLZs";
+        audioFoco.preload = "auto"; // Tenta carregar o som em background
+
+        function toggleFoco(ligar) {
+            const btnOn = document.getElementById('f-on');
+            const btnOff = document.getElementById('f-off');
+
+            if(ligar) {
+                btnOn.classList.add('active');
+                btnOff.classList.remove('active');
+                
+                // Tenta tocar o áudio
+                audioFoco.play().catch(e => {
+                    console.error("Erro ao tocar som: Talvez o arquivo seja grande demais ou precise de um clique prévio na página.", e);
+                    // Alerta opcional para teste:
+                    // alert("Clique na tela antes de ativar o foco para liberar o som.");
+                });
+            } else {
+                btnOn.classList.remove('active');
+                btnOff.classList.add('active');
+                audioFoco.pause();
+                audioFoco.currentTime = 0; // Reinicia o som
+            }
+        }
+
     </script>
 </body>
 </html>
