@@ -1993,6 +1993,12 @@
 </div>
 
 <script>
+
+document.addEventListener('contextmenu', event => event.preventDefault()); // Bloqueia clique direito
+document.onkeydown = function(e) {
+    if(e.keyCode == 123) return false; // Bloqueia F12
+};
+
 // --- DADOS E LÓGICA DE SORTEIO ---
 const incidenciaGeral = {
     "CONHECIMENTOS BANCARIOS": 27.66, "VENDAS E NEGOCIACAO": 26.56, "LINGUA PORTUGUESA": 14.25,
