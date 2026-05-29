@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Downloads | Master Dashboard BB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { 
+            --lilas: #8b5cf6; 
+            --azul: #0047bb; 
+            --amarelo: #fcf000; 
+            --cinza-escuro: #1e293b;
+            --bg-card: #ffffff;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; 
+            background: #f1f5f9; 
+            color: var(--cinza-escuro);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        header {
+            background: var(--azul);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+            border-bottom: 6px solid var(--lilas);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: -2rem auto auto;
+            padding: 0 1.5rem 4rem;
+            width: 100%;
+        }
+
+        .grid-platforms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+        }
+
+        .platform-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .platform-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #cbd5e1;
+            transition: background 0.3s ease;
+        }
+
+        /* Efeito de Hover apenas na versão ativa (Windows) */
+        .platform-card.windows:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(139, 92, 246, 0.15);
+        }
+        .platform-card.windows:hover::before { background: #0078d4; }
+
+        /* Estilo para cartões indisponíveis (Em breve) */
+        .platform-card.disabled {
+            opacity: 0.7;
+            background: #f8fafc;
+        }
+        .platform-card.disabled .icon-wrapper {
+            color: #94a3b8;
+        }
+
+        .badge-breve {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            text-transform: uppercase;
+            display: inline-block;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+        }
+
+        .icon-wrapper {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            color: #64748b;
+            transition: color 0.3s ease;
+        }
+        
+        .platform-card.windows:hover .icon-wrapper { color: #0078d4; }
+
+        .platform-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--cinza-escuro);
+        }
+
+        .platform-card p {
+            font-size: 0.95rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .btn-download {
+            width: 100%;
+            background: var(--azul);
+            color: white;
+            padding: 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .platform-card.windows .btn-download { background: var(--lilas); }
+        .platform-card.windows .btn-download:hover { background: #7c3aed; }
+        
+        /* Botão desativado para versões futuras */
+        .btn-download.disabled-btn {
+            background: #cbd5e1;
+            color: #94a3b8;
+            cursor: not-allowed;
+            pointer-events: none; /* Impede o clique */
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            color: #94a3b8;
+            font-size: 0.9rem;
+            background: #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Escolha a sua Plataforma</h1>
+    <p>Selecione o sistema operacional para baixar o seu Master Dashboard BB</p>
+</header>
+
+<div class="container">
+    <div class="grid-platforms">
+        
+        <div class="platform-card windows">
+            <div>
+                <div style="height: 26px;"></div> <div class="icon-wrapper">
+                    <i class="fab fa-windows"></i>
+                </div>
+                <h3>Windows</h3>
+                <p>Instalação portátil ideal para Computadores e Notebooks. Requer Windows 10 ou superior.</p>
+            </div>
+            <a href="#" class="btn-download">
+                <i class="fas fa-download"></i> Baixar para Windows
+            </a>
+        </div>
+
+        <div class="platform-card disabled">
+            <div>
+                <span class="badge-breve">Em breve</span>
+                <div class="icon-wrapper">
+                    <i class="fab fa-android"></i>
+                </div>
+                <h3>Android</h3>
+                <p>Leve o seu banco de questões no bolso. Compatível com Smartphones e Tablets.</p>
+            </div>
+            <a href="#" class="btn-download disabled-btn">
+                <i class="fas fa-clock"></i> Indisponível
+            </a>
+        </div>
+
+        <div class="platform-card disabled">
+            <div>
+                <span class="badge-breve">Em breve</span>
+                <div class="icon-wrapper">
+                    <i class="fab fa-apple"></i>
+                </div>
+                <h3>Apple</h3>
+                <p>Versão dedicada e otimizada para ecossistemas macOS e dispositivos iOS (iPhone/iPad).</p>
+            </div>
+            <a href="#" class="btn-download disabled-btn">
+                <i class="fas fa-clock"></i> Indisponível
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<footer>
+    <p>Master Dashboard BB © 2026. Todos os direitos reservados.</p>
+</footer>
+
+</body>
+</html>
