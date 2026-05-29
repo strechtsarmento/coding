@@ -9,36 +9,68 @@
             --lilas: #8b5cf6; 
             --azul: #0047bb; 
             --amarelo: #fcf000; 
-            --cinza-escuro: #334155;<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Master Dashboard BB | Domine o Edital</title>
-    <style>
-        :root { 
-            --lilas: #8b5cf6; 
-            --azul: #0047bb; 
-            --amarelo: #fcf000; 
             --cinza-escuro: #334155;
             --texto-secundario: #64748b;
         }
         body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #f8fafc; color: #1e293b; }
         
-        /* Hero Section com mais impacto */
-        .hero { width: 100%; padding: 5rem 1rem; background: var(--azul); color: white; text-align: center; }
-        .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-        .hero p { font-size: 1.25rem; opacity: 0.9; margin-bottom: 2rem; }
+        /* Hero Section adaptável */
+        .hero { width: 100%; padding: 5rem 1rem; background: var(--azul); color: white; text-align: center; box-sizing: border-box; }
+        .hero h1 { font-size: 3rem; margin-bottom: 0.5rem; line-height: 1.2; }
+        .hero p { font-size: 1.25rem; opacity: 0.9; margin-bottom: 2rem; padding: 0 1rem; }
         
-        .btn-cta { background: var(--amarelo); color: var(--azul); padding: 1.2rem 3rem; font-weight: 800; border-radius: 50px; text-decoration: none; display: inline-block; transition: 0.3s; font-size: 1.1rem; }
+        /* Botão CTA corrigido para não quebrar no mobile */
+        .btn-cta { 
+            background: var(--amarelo); 
+            color: var(--azul); 
+            padding: 1.2rem 2.5rem; 
+            font-weight: 800; 
+            border-radius: 50px; 
+            text-decoration: none; 
+            display: inline-block; 
+            transition: 0.3s; 
+            font-size: 1.1rem; 
+            max-width: 90%; 
+            box-sizing: border-box; 
+        }
         .btn-cta:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
         
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1100px; margin: -50px auto 0; padding: 2rem; }
+        /* Grid de recursos ajustado */
+        .features { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2rem; 
+            max-width: 1100px; 
+            margin: -50px auto 0; 
+            padding: 2rem; 
+            box-sizing: border-box; 
+        }
         .card { background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border-top: 6px solid var(--lilas); }
         
-        .showcase { padding: 4rem 1rem; text-align: center; }
+        /* Seção de vídeos responsiva */
+        .showcase { padding: 4rem 1rem; text-align: center; box-sizing: border-box; }
+        .showcase h2 { font-size: 2rem; padding: 0 1rem; }
         .video-container { max-width: 800px; margin: 2rem auto; border-radius: 16px; overflow: hidden; border: 8px solid white; box-shadow: 0 20px 25px rgba(0,0,0,0.1); }
         .video-container video { width: 100%; display: block; }
+
+        /* ==========================================================================
+           MÉDIAS QUERIES - REGRAS EXCLUSIVAS PARA TELEMÓVEL / CELULAR
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .hero { padding: 4rem 1rem 6rem 1rem; }
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1.1rem; }
+            
+            .btn-cta { font-size: 1rem; padding: 1rem 2rem; width: 100%; max-width: 320px; }
+            
+            /* Remove a margem negativa agressiva no mobile para os cards não atropelarem o texto */
+            .features { margin: -30px auto 0; padding: 1rem; gap: 1.5rem; }
+            .card { padding: 1.8rem; }
+            
+            .showcase { padding: 2.5rem 0.5rem; }
+            .showcase h2 { font-size: 1.6rem; }
+            .video-container { border: 4px solid white; margin: 1.5rem 0.5rem; }
+        }
     </style>
 </head>
 <body>
@@ -70,14 +102,12 @@
     <div class="video-container">
         <video controls width="100%">
             <source src="Gravação de Tela 2026-05-28 004645.mp4" type="video/mp4">
-            
         </video>
     </div>
 
     <div class="video-container">
         <video controls width="100%">
             <source src="Gravação de Tela 2026-05-21 201122.mp4" type="video/mp4">
-           
         </video>
     </div>
 </section>
@@ -88,4 +118,3 @@
 
 </body>
 </html>
-
